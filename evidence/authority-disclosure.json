@@ -1,0 +1,8 @@
+{
+  "iss": "https://as.acme-co.example",
+  "sub": "urn:acme-co:user:4417",
+  "aud": "urn:frobozz-supply",
+  "scope": "urn:frobozz-supply:orders.submit urn:frobozz-supply:orders.read",
+  "jti": "aauth-grant-jti:33b83ac8ae7846a3a6229bdee09b16e3",
+  "exp": 1772000900
+}

@@ -1,0 +1,14 @@
+{
+  "acme-co": {
+    "operator": "acme-co",
+    "developer": "goose-agent@v1",
+    "key_id": "2e0a850bc83521db814fdfdf0c3d7a0fd88204ec4dcaf5a3bdec1f44318251c3",
+    "ledger": "buyer-ledger.jsonl"
+  },
+  "frobozz-supply": {
+    "operator": "frobozz-supply",
+    "developer": "fulfillment-agent@v1",
+    "key_id": "e4c624474d0d0e48cb79f2919db7a56558027c0f3d80a6238fb1192543ce6592",
+    "ledger": "seller-ledger.jsonl"
+  }
+}

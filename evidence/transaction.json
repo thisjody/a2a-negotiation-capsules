@@ -1,0 +1,38 @@
+{
+  "order": {
+    "po_number": "PO-7777",
+    "vendor": "Frobozz Supply",
+    "vendor_operator": "frobozz-supply",
+    "buyer": "Acme Co",
+    "line_items": [
+      {
+        "sku": "widget",
+        "qty": 29,
+        "unit_price_usd": "42.00"
+      }
+    ],
+    "amount_usd": "1218.00",
+    "currency": "USD",
+    "terms": "net30"
+  },
+  "subject_digest": "e26a998baaf99379b32d9c60281f17f5318499a4b085e7c9ee6dee033ce2548c",
+  "buyer_operator": "acme-co",
+  "seller_operator": "frobozz-supply",
+  "buyer_order_capsule_id": "7c7e9f8169b0fe63306ef4acab7a04a44d1b80cbcd8eb89ce994dcaa5412befe",
+  "seller_confirm_capsule_id": "e038d2af5aef71561d0d09e67e216879743635694f053af8fae2a4a77014bdc4",
+  "buyer_close_out_capsule_id": "a05af1966338c4c7f6a909b0da86efb9172f7e2c8e15749e9e7f04a5a85296a8",
+  "bilateral": {
+    "protocol": "draft-mih-agent-bilateral-attestation-00 (capsule_emit.bilateral)",
+    "handshake_id": "6945668d5e79450da102a5a6e23bf353",
+    "state": "bilateral",
+    "request_sig_digest": "394a8a205321d9d62a4f3b45d4c8280d2f6a5077965a8b2f40d780b485475189",
+    "action_sig_digest": "8b3d486bf8a87e32411cae543fbe2c75c3adfc79dca37a3a5a72c1cd44cafea7"
+  },
+  "mandate": {
+    "wicket_digest": "744670b20906b5ff6be2258e720479ddc951dfb03df285525fe1b2e61460606c",
+    "wicket_result": "pass",
+    "wicket_manifest": "wicket.json",
+    "negotiation_digest": "ab457a5a44fe59ac7b738f0223b9dd21c1a34cf5a64b8575df397e102988255e",
+    "accepted_offer_digest": "2dd3b2d16f0982b5d081f2cec26742d5186cfec515b7f3b5f5e7e7a87df3b70d"
+  }
+}

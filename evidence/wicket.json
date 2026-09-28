@@ -1,0 +1,21 @@
+{
+  "manifest_version": "1",
+  "party": "buyer",
+  "agent": "acme-co/po-agent",
+  "approved_by": "dana@acme-co.example",
+  "approved_at": "2026-09-01",
+  "brief": "29 widgets, net30 payment terms, delivered inside two weeks.",
+  "hard_invariants": {
+    "quantity": 29,
+    "unit_ceiling_usd": "50.00",
+    "required_payment_terms": "net30",
+    "max_lead_time_days": 14
+  },
+  "negotiation": {
+    "open_counter_pct_of_quote": 60,
+    "unit_target_usd": "43.00",
+    "climb_headroom_usd": "3.00",
+    "counter_every_offer": true,
+    "max_rounds": 3
+  }
+}

@@ -1,0 +1,328 @@
+[
+  {
+    "seq": 1,
+    "from": "acme-co/po-agent",
+    "to": "frobozz-supply, globex-corp",
+    "kind": "rfq.broadcast",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "buyer": "Acme Co",
+      "sku": "widget",
+      "quantity": 29,
+      "required_payment_terms": "net30",
+      "max_lead_time_days": 14,
+      "note": "Quoting two suppliers. Price per unit, payment terms, lead time."
+    }
+  },
+  {
+    "seq": 2,
+    "from": "frobozz-supply",
+    "to": "acme-co/po-agent",
+    "kind": "rfq.quote",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "seller": "frobozz-supply",
+      "unit_price_usd": "52.00",
+      "payment_terms": "net15",
+      "lead_time_days": 12,
+      "quantity": 29,
+      "total_usd": "1508.00"
+    }
+  },
+  {
+    "seq": 3,
+    "from": "globex-corp",
+    "to": "acme-co/po-agent",
+    "kind": "rfq.quote",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "seller": "globex-corp",
+      "unit_price_usd": "48.00",
+      "payment_terms": "net30",
+      "lead_time_days": 21,
+      "quantity": 29,
+      "total_usd": "1392.00"
+    }
+  },
+  {
+    "seq": 4,
+    "from": "acme-co/po-agent",
+    "to": "frobozz-supply",
+    "kind": "rfq.counter",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "round": 2,
+      "unit_price_usd": "31.20",
+      "required_payment_terms": "net30",
+      "max_lead_time_days": 14
+    }
+  },
+  {
+    "seq": 5,
+    "from": "frobozz-supply",
+    "to": "acme-co/po-agent",
+    "kind": "rfq.quote",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "seller": "frobozz-supply",
+      "unit_price_usd": "47.50",
+      "payment_terms": "net30",
+      "lead_time_days": 12,
+      "quantity": 29,
+      "total_usd": "1377.50"
+    }
+  },
+  {
+    "seq": 6,
+    "from": "acme-co/po-agent",
+    "to": "globex-corp",
+    "kind": "rfq.counter",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "round": 2,
+      "unit_price_usd": "28.80",
+      "required_payment_terms": "net30",
+      "max_lead_time_days": 14
+    }
+  },
+  {
+    "seq": 7,
+    "from": "globex-corp",
+    "to": "acme-co/po-agent",
+    "kind": "rfq.quote",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "seller": "globex-corp",
+      "unit_price_usd": "46.00",
+      "payment_terms": "net30",
+      "lead_time_days": 16,
+      "quantity": 29,
+      "total_usd": "1334.00"
+    }
+  },
+  {
+    "seq": 8,
+    "from": "acme-co/po-agent",
+    "to": "frobozz-supply",
+    "kind": "rfq.counter",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "round": 3,
+      "unit_price_usd": "40.00",
+      "required_payment_terms": "net30",
+      "max_lead_time_days": 14,
+      "note": "I am holding a competing quote."
+    }
+  },
+  {
+    "seq": 9,
+    "from": "frobozz-supply",
+    "to": "acme-co/po-agent",
+    "kind": "rfq.quote",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "seller": "frobozz-supply",
+      "unit_price_usd": "42.00",
+      "payment_terms": "net30",
+      "lead_time_days": 10,
+      "quantity": 29,
+      "total_usd": "1218.00"
+    }
+  },
+  {
+    "seq": 10,
+    "from": "acme-co/po-agent",
+    "to": "globex-corp",
+    "kind": "rfq.counter",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "round": 3,
+      "unit_price_usd": "40.00",
+      "required_payment_terms": "net30",
+      "max_lead_time_days": 14,
+      "note": "I am holding a competing quote."
+    }
+  },
+  {
+    "seq": 11,
+    "from": "globex-corp",
+    "to": "acme-co/po-agent",
+    "kind": "rfq.quote",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "seller": "globex-corp",
+      "unit_price_usd": "41.50",
+      "payment_terms": "net30",
+      "lead_time_days": 21,
+      "quantity": 29,
+      "total_usd": "1203.50"
+    }
+  },
+  {
+    "seq": 12,
+    "from": "acme-co/po-agent",
+    "to": "frobozz-supply",
+    "kind": "rfq.select",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "selected": "frobozz-supply",
+      "unit_price_usd": "42.00",
+      "payment_terms": "net30",
+      "lead_time_days": 10,
+      "wicket_digest": "744670b20906b5ff6be2258e720479ddc951dfb03df285525fe1b2e61460606c",
+      "wicket_result": "pass"
+    }
+  },
+  {
+    "seq": 13,
+    "from": "acme-co/po-agent",
+    "to": "globex-corp",
+    "kind": "rfq.decline",
+    "payload": {
+      "rfq_id": "RFQ-7777",
+      "outcome": "not selected",
+      "reason_code": "buyer_hard_invariant",
+      "note": "constraint in the buyer's approved brief; the brief itself is not disclosed"
+    }
+  },
+  {
+    "seq": 14,
+    "from": "acme-co/po-agent",
+    "to": "as.acme-co.example",
+    "kind": "POST /agent_authorization",
+    "payload": {
+      "grant_type": "urn:ietf:params:oauth:grant-type:agent_authorization",
+      "client_id": "acme-po-agent",
+      "scope": "urn:frobozz-supply:orders.submit urn:frobozz-supply:orders.read",
+      "reason": "Place purchase order PO-7777 ($1218.00, net30) with Frobozz Supply on your behalf.",
+      "pii_elements_collected": [
+        "full_name",
+        "date_of_birth",
+        "ssn_last4"
+      ],
+      "subject_handle": "acme-user-handle-4417"
+    }
+  },
+  {
+    "seq": 15,
+    "from": "as.acme-co.example",
+    "to": "acme-co/po-agent",
+    "kind": "200 agent_authorization",
+    "payload": {
+      "request_code": "AAUTH-DAC8C439147142F6",
+      "token_endpoint": "https://as.acme-co.example/token",
+      "poll_interval": 5,
+      "expires_in": 600,
+      "poll_sse_endpoint": "https://as.acme-co.example/agent_authorization/sse",
+      "reason": "Place purchase order PO-7777 ($1218.00, net30) with Frobozz Supply on your behalf.",
+      "scope_descriptions": {
+        "urn:frobozz-supply:orders.submit": "Submit a purchase order to Frobozz Supply on your behalf.",
+        "urn:frobozz-supply:orders.read": "Read the status of purchase orders you have placed."
+      }
+    }
+  },
+  {
+    "seq": 16,
+    "from": "as.acme-co.example",
+    "to": "acme-co/po-agent",
+    "kind": "200 token (poll #1)",
+    "payload": {
+      "error": "authorization_pending"
+    }
+  },
+  {
+    "seq": 17,
+    "from": "as.acme-co.example",
+    "to": "acme-co/po-agent",
+    "kind": "200 token (poll #2)",
+    "payload": {
+      "access_token": "<redacted compact JWS: 3 segments, 74.526.86 chars, 688 bytes total>",
+      "token_type": "Bearer",
+      "expires_in": 900,
+      "issued_token_type": "urn:ietf:params:oauth:token-type:jwt",
+      "scope": "urn:frobozz-supply:orders.submit urn:frobozz-supply:orders.read"
+    }
+  },
+  {
+    "seq": 18,
+    "from": "acme-co",
+    "to": "frobozz-supply",
+    "kind": "order.submit",
+    "payload": {
+      "order": {
+        "po_number": "PO-7777",
+        "vendor": "Frobozz Supply",
+        "vendor_operator": "frobozz-supply",
+        "buyer": "Acme Co",
+        "line_items": [
+          {
+            "sku": "widget",
+            "qty": 29,
+            "unit_price_usd": "42.00"
+          }
+        ],
+        "amount_usd": "1218.00",
+        "currency": "USD",
+        "terms": "net30"
+      },
+      "subject_digest": "e26a998baaf99379b32d9c60281f17f5318499a4b085e7c9ee6dee033ce2548c",
+      "buyer_capsule_id": "7c7e9f8169b0fe63306ef4acab7a04a44d1b80cbcd8eb89ce994dcaa5412befe"
+    }
+  },
+  {
+    "seq": 19,
+    "from": "acme-co",
+    "to": "frobozz-supply",
+    "kind": "order.present_credential",
+    "payload": {
+      "po_number": "PO-7777",
+      "access_token": "<redacted compact JWS: 3 segments, 74.526.86 chars, 688 bytes total>",
+      "note": "the bearer token DOES cross the wire; it never enters a capsule"
+    }
+  },
+  {
+    "seq": 20,
+    "from": "frobozz-supply",
+    "to": "acme-co",
+    "kind": "order.accepted",
+    "payload": {
+      "po_number": "PO-7777",
+      "seller_capsule_id": "31063177740c10bf92160b62c031f541c65f56a51aa96bb72bd3cb739b2fd247",
+      "auth_checks": [
+        {
+          "check": "signature",
+          "passed": true
+        },
+        {
+          "check": "audience",
+          "passed": true
+        },
+        {
+          "check": "scope",
+          "passed": true
+        },
+        {
+          "check": "expiry",
+          "passed": true
+        }
+      ]
+    }
+  },
+  {
+    "seq": 21,
+    "from": "frobozz-supply",
+    "to": "acme-co",
+    "kind": "fulfillment.confirm",
+    "payload": {
+      "confirmation": {
+        "po_number": "PO-7777",
+        "fulfillment_ref": "GF-7777-1",
+        "amount_usd": "1218.00",
+        "status": "fulfilled"
+      },
+      "seller_capsule_id": "e038d2af5aef71561d0d09e67e216879743635694f053af8fae2a4a77014bdc4",
+      "response_digest": "81be565e2026d25fdb5ba9d78eb974b9ae6070476b069445928a3a086ee993bc",
+      "cites_buyer_capsule_id": "7c7e9f8169b0fe63306ef4acab7a04a44d1b80cbcd8eb89ce994dcaa5412befe"
+    }
+  }
+]

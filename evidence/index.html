@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>demo2 — negotiation, two ledgers, cross-verify</title>
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box}
+body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+     max-width:900px;margin:0 auto;padding:32px 20px 80px;background:#f8fafc;color:#1e293b;
+     line-height:1.5}
+h1{font-size:1.5rem;margin:0 0 4px}
+h2{font-size:1.05rem;margin:34px 0 10px;padding-bottom:6px;border-bottom:1px solid #e2e8f0;
+   letter-spacing:.02em;text-transform:uppercase;color:#475569;font-weight:700}
+h3{font-size:.95rem;margin:18px 0 8px}
+p{margin:8px 0}
+.sub{color:#64748b;font-size:.9rem;margin:0 0 14px}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;
+       font-weight:700;letter-spacing:.03em;margin-right:6px}
+.b-ok{background:#dcfce7;color:#166534}
+.b-bad{background:#fee2e2;color:#991b1b}
+.b-info{background:#e0e7ff;color:#3730a3}
+.b-warn{background:#fef3c7;color:#92400e}
+.hash{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.72rem;
+      word-break:break-all;color:#64748b}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;margin:10px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.offer{background:#fff;border:1px solid #e2e8f0;border-left-width:4px;border-radius:8px;
+       padding:12px 14px}
+.offer .who{font-weight:700}
+.offer .price{font-size:1.3rem;font-weight:700;margin:4px 0}
+.offer .terms{color:#475569;font-size:.85rem}
+.offer .said{color:#334155;font-size:.85rem;font-style:italic;margin-top:8px}
+.win{border-left-color:#10b981;background:#f0fdf4}
+.out{border-left-color:#ef4444}
+.neutral{border-left-color:#94a3b8}
+.think{border-left:3px solid #c7d2fe;background:#eef2ff;padding:8px 12px;margin:8px 0;
+       border-radius:0 6px 6px 0;font-size:.9rem}
+.move{padding:6px 12px;margin:4px 0;font-size:.9rem;border-left:3px solid #e2e8f0}
+.move.out{border-left-color:#3b82f6}
+.move.in{border-left-color:#f59e0b}
+.move .dir{font-family:ui-monospace,monospace;color:#94a3b8;margin-right:8px}
+.said-line{color:#475569;font-size:.85rem;font-style:italic;padding:2px 12px 6px 24px}
+.note-line{color:#475569;font-size:.85rem;font-family:ui-monospace,monospace;padding:2px 12px}
+.binding{background:#ecfdf5;border:1px solid #10b981;border-radius:10px;padding:16px;margin:14px 0}
+table{border-collapse:collapse;width:100%;margin:8px 0}
+td,th{padding:6px 9px;border:1px solid #e2e8f0;text-align:left;font-size:.82rem;
+      vertical-align:top}
+th{background:#f1f5f9;font-weight:600}
+tr.fail td{background:#fef2f2}
+.wicket{background:#1e293b;color:#e2e8f0;border-radius:10px;padding:14px 16px;margin:10px 0;
+        font-family:ui-monospace,monospace;font-size:.82rem}
+.wicket .k{color:#94a3b8}
+.tamper{margin:12px 0}
+.tamper h3{margin-bottom:4px}
+.limits li{margin:6px 0;font-size:.9rem}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid #e2e8f0;color:#94a3b8;
+      font-size:.78rem}
+</style>
+</head><body><h1>demo2 — a negotiation you can watch, a record a stranger can check</h1>
+<p class="sub">Two competing suppliers, three narrated rounds, one winner — then two
+independent ledgers, an offline cross-verify and four tamper injections.
+This page is a render of one executed run; it contains no script and fetches nothing.</p>
+<p><span class="badge b-ok">19 CHECKS, 0 FAILURES</span><span class="badge b-ok">4 TAMPERS DETECTED</span><span class="badge b-info">OFFLINE</span>
+<span class="badge b-warn">SCRIPTED NEGOTIATION</span></p>
+<div class="card">
+<table>
+<tr><th>bundle</th><td class="hash">evidence</td></tr>
+<tr><th>pacing</th><td>fast (no pauses)</td></tr>
+<tr><th>egress</th><td>CAPSULE_WITNESS=off, CAPSULE_ANCHOR=off, AAC_ANCHOR_URL=off;
+every emitter anchor=False. No socket opened.</td></tr>
+</table></div><h2>The wicket — the buyer's private brief</h2>
+<p>Approved by a human before the agent started. The audience sees it here; no
+supplier ever does. What gets sealed into the purchase order is its
+<em>digest</em> and a pass/fail — never the ceiling, never the target.</p>
+<div class="wicket">
+<div><span class="k">hard  </span> 29 units &middot;
+ ceiling 50.00/unit &middot; net30 &middot;
+ lead &le; 14d</div>
+<div><span class="k">aim   </span> open at 60% of quote,
+ climb toward 43.00/unit, max 3 rounds</div>
+<div><span class="k">digest</span> 744670b20906b5ff6be2258e720479ddc951dfb03df285525fe1b2e61460606c</div>
+</div>
+<p class="sub">Privacy check, run mechanically at the end of the negotiation: the
+ceiling and target strings appear in
+<strong>0</strong> of
+13 wire frames.</p><h2>The negotiation</h2><h3>Round 1 — opening quotes</h3><div class="grid"><div class="offer neutral">
+<div class="who">Frobozz Supply </div>
+<div class="price">$52.00<span style="font-size:.8rem;font-weight:400">/unit</span></div>
+<div class="terms">net15 &middot; 12d lead &middot; $1508.00 total</div>
+
+<div class="said">&ldquo;List is $52.00 a unit, net15, twelve days out. No volume break at 29.&rdquo;</div>
+</div><div class="offer neutral">
+<div class="who">Globex Corp </div>
+<div class="price">$48.00<span style="font-size:.8rem;font-weight:400">/unit</span></div>
+<div class="terms">net30 &middot; 21d lead &middot; $1392.00 total</div>
+
+<div class="said">&ldquo;$48.00 a unit, net30 from the start, but I&#x27;m three weeks out.&rdquo;</div>
+</div></div><h3>Round 2 — buyer anchors at 60%</h3><div class="grid"><div class="offer neutral">
+<div class="who">Frobozz Supply </div>
+<div class="price">$47.50<span style="font-size:.8rem;font-weight:400">/unit</span></div>
+<div class="terms">net30 &middot; 12d lead &middot; $1377.50 total</div>
+<div class="terms">after buyer's 31.20 counter &middot; moved 4.50/unit</div>
+<div class="said">&ldquo;$47.50 and I&#x27;ll move you to net30 — the terms cost me less than the price does.&rdquo;</div>
+</div><div class="offer neutral">
+<div class="who">Globex Corp </div>
+<div class="price">$46.00<span style="font-size:.8rem;font-weight:400">/unit</span></div>
+<div class="terms">net30 &middot; 16d lead &middot; $1334.00 total</div>
+<div class="terms">after buyer's 28.80 counter &middot; moved 2.00/unit</div>
+<div class="said">&ldquo;$46.00. I can pull it to sixteen days; below that I&#x27;d be paying air freight.&rdquo;</div>
+</div></div><h3>Round 3 — buyer climbs, sellers close (buyer at $40.00/unit)</h3><div class="grid"><div class="offer win">
+<div class="who">Frobozz Supply <span class="badge b-ok">SELECTED</span></div>
+<div class="price">$42.00<span style="font-size:.8rem;font-weight:400">/unit</span></div>
+<div class="terms">net30 &middot; 10d lead &middot; $1218.00 total</div>
+<div class="terms">after buyer's 40.00 counter &middot; moved 5.50/unit</div>
+<div class="said">&ldquo;$42.00, net30, ten days, and I absorb the expedited freight. That is best and final.&rdquo;</div>
+</div><div class="offer neutral">
+<div class="who">Globex Corp </div>
+<div class="price">$41.50<span style="font-size:.8rem;font-weight:400">/unit</span></div>
+<div class="terms">net30 &middot; 21d lead &middot; $1203.50 total</div>
+<div class="terms">after buyer's 40.00 counter &middot; moved 4.50/unit</div>
+<div class="said">&ldquo;$41.50 — I&#x27;ll beat anyone on price if you can take the three-week lead. That&#x27;s the trade.&rdquo;</div>
+</div></div><h2>What the buyer said, and why — verbatim</h2>
+<p class="sub">The same lines the terminal printed, in the same order. Reasoning
+first, then the move.</p><div class="think">Before I opened a single conversation, a human approved what I am allowed to agree to. That brief is my wicket. The room sees it here because you are the audience; no supplier ever will.</div><div class="note-line">wicket  hard    29 units - ceiling 50.00/unit - net30 - lead &lt;= 14d</div><div class="note-line">wicket  aim     open at 60% of quote, climb toward 43.00/unit, max 3 rounds</div><div class="note-line">wicket  digest  744670b20906b5ff6be2258e720479ddc951dfb03df285525fe1b2e61460606c</div><div class="think">That digest is what gets sealed into the purchase order — not the ceiling, not the target. A stranger can later prove I stayed inside a mandate without ever learning what my ceiling was.</div><div class="note-line">seller  Frobozz Supply   Incumbent widget supplier. Regional warehouse, own freight desk.</div><div class="note-line">seller  Globex Corp      National distributor. Container-scale pricing, port-side lead times.</div><div class="think">One brief, two suppliers, same wording to both — if the quotes differ, it is the sellers that differ, not the ask.</div><div class="move out"><span class="dir">&rarr;</span>To Frobozz Supply and Globex Corp: RFQ-7777 — 29 x widget, net30, delivered inside 14 days. Quote me.</div><div class="move in"><span class="dir">&larr;</span>Frobozz Supply: 52.00/unit  net15  12d lead   (1508.00 total)</div><div class="said-line">&quot;List is $52.00 a unit, net15, twelve days out. No volume break at 29.&quot;</div><div class="move in"><span class="dir">&larr;</span>Globex Corp: 48.00/unit  net30  21d lead   (1392.00 total)</div><div class="said-line">&quot;$48.00 a unit, net30 from the start, but I&#x27;m three weeks out.&quot;</div><div class="think">Globex Corp is the cheaper opener at 48.00 but is 21 days out, which is outside the brief. Neither opener is close to where I am told to land. I counter both — every offer gets a counter.</div><div class="think">Anchoring at 60% of each seller&#x27;s own quote. Not an insult — a probe: how far a supplier moves off its opener tells me where its floor actually is.</div><div class="move out"><span class="dir">&rarr;</span>To Frobozz Supply: countering at 31.20/unit (60% of their 52.00) to anchor low.</div><div class="move in"><span class="dir">&larr;</span>Frobozz Supply: 47.50/unit  net30  12d lead   (1377.50 total)   (moved 4.50/unit)</div><div class="said-line">&quot;$47.50 and I&#x27;ll move you to net30 — the terms cost me less than the price does.&quot;</div><div class="move out"><span class="dir">&rarr;</span>To Globex Corp: countering at 28.80/unit (60% of their 48.00) to anchor low.</div><div class="move in"><span class="dir">&larr;</span>Globex Corp: 46.00/unit  net30  16d lead   (1334.00 total)   (moved 2.00/unit)</div><div class="said-line">&quot;$46.00. I can pull it to sixteen days; below that I&#x27;d be paying air freight.&quot;</div><div class="think">Frobozz Supply moved 4.50 a unit off its opener; Globex Corp moved 2.00. The one that moved further has further left to move. One more round, then I stop.</div><div class="think">Climbing to 40.00/unit with both — deliberately short of where I am told to land, so I still have a move in hand. Same number to each, and each of them knows there is another quote on my desk.</div><div class="move out"><span class="dir">&rarr;</span>To Frobozz Supply: 40.00/unit, net30, inside 14 days. I am comparing you against another quote.</div><div class="move in"><span class="dir">&larr;</span>Frobozz Supply: 42.00/unit  net30  10d lead   (1218.00 total)   [best and final]</div><div class="said-line">&quot;$42.00, net30, ten days, and I absorb the expedited freight. That is best and final.&quot;</div><div class="move out"><span class="dir">&rarr;</span>To Globex Corp: 40.00/unit, net30, inside 14 days. I am comparing you against another quote.</div><div class="move in"><span class="dir">&larr;</span>Globex Corp: 41.50/unit  net30  21d lead   (1203.50 total)   [best and final]</div><div class="said-line">&quot;$41.50 — I&#x27;ll beat anyone on price if you can take the three-week lead. That&#x27;s the trade.&quot;</div><div class="think">Both are done moving. Now the part that is not haggling: does each final offer fit the brief my principal approved? That brief is private — the grading is not.</div><div class="note-line">wicket  Frobozz Supply   ELIGIBLE</div><div class="note-line">wicket  Globex Corp      OUT — fails lead_time</div><div class="think">Globex Corp is the cheapest number on the table — 14.50 cheaper across the order. It is also outside a hard invariant, and a hard invariant is not mine to trade. The lowest price is not the winning price.</div><div class="think">Frobozz Supply at 42.00/unit clears every invariant and beats the number I was told to land on. Over-negotiating a winning offer is how you lose it. I stop here.</div><div class="move out"><span class="dir">&rarr;</span>To Frobozz Supply: selected. 29 units at 42.00, net30, 10 days — 1218.00 total. Raising the PO.</div><div class="move out"><span class="dir">&rarr;</span>To Globex Corp: not this time — a constraint in my brief, not your price. I am not telling them which one.</div><h2>The wicket check — why the cheapest offer did not win</h2>
+<table><tr><th>supplier</th><th>final</th><th>terms</th><th>lead</th>
+<th>invariants</th><th>verdict</th></tr><tr><td>Frobozz Supply</td><td><strong>$42.00</strong></td><td>net30</td><td>10d</td><td>unit_ceiling, payment_terms, lead_time</td><td>ELIGIBLE</td></tr><tr class="fail"><td>Globex Corp</td><td><strong>$41.50</strong></td><td>net30</td><td>21d</td><td>unit_ceiling, payment_terms, lead_time ✗</td><td>OUT — lead_time</td></tr></table><h2>The winner becomes the counterparty</h2>
+<div class="binding">
+<h3 style="margin-top:0">Frobozz Supply &mdash; PO-7777</h3>
+<table>
+<tr><th>order</th><td>29 &times;
+ widget @ $42.00/unit
+ = <strong>$1218.00</strong> net30</td></tr>
+<tr><th>subject_digest</th><td class="hash">e26a998baaf99379b32d9c60281f17f5318499a4b085e7c9ee6dee033ce2548c</td></tr>
+<tr><th>wicket digest / result</th><td class="hash">744670b20906b5ff6be2258e720479ddc951dfb03df285525fe1b2e61460606c
+ &mdash; pass</td></tr>
+<tr><th>negotiation digest</th><td class="hash">ab457a5a44fe59ac7b738f0223b9dd21c1a34cf5a64b8575df397e102988255e</td></tr>
+<tr><th>accepted offer digest</th><td class="hash">2dd3b2d16f0982b5d081f2cec26742d5186cfec515b7f3b5f5e7e7a87df3b70d</td></tr>
+<tr><th>bilateral state</th><td>bilateral &middot; handshake
+ <span class="hash">6945668d5e79450da102a5a6e23bf353</span></td></tr>
+</table>
+<p class="sub" style="margin-bottom:0">The winner's identity is what named the AAuth
+resource server, the scopes a human approved, and the operator stamped on every
+sell-side capsule.</p>
+</div><h2>Authority — AAuth says who may act</h2>
+<div class="card">
+<p><strong>request_code</strong> <span class="hash">AAUTH-DAC8C439147142F6</span> &middot;
+<strong>issued_token_type</strong> <span class="hash">urn:ietf:params:oauth:token-type:jwt</span> &middot;
+approved by dana@acme-co.example</p>
+<p>What the Authorization Server displayed to the human (draft §3.2 step 2):</p>
+<table><tr><th>scope</th><th>description shown</th></tr><tr><td class="hash">urn:frobozz-supply:orders.submit</td><td>Submit a purchase order to Frobozz Supply on your behalf.</td></tr><tr><td class="hash">urn:frobozz-supply:orders.read</td><td>Read the status of purchase orders you have placed.</td></tr></table><p>Claims the agent holds — sealed into the capsules as <em>digests only</em>:</p><table><tr><th>iss</th><td class="hash">https://as.acme-co.example</td></tr><tr><th>sub</th><td class="hash">urn:acme-co:user:4417</td></tr><tr><th>aud</th><td class="hash">urn:frobozz-supply</td></tr><tr><th>scope</th><td class="hash">urn:frobozz-supply:orders.submit urn:frobozz-supply:orders.read</td></tr><tr><th>jti</th><td class="hash">aauth-grant-jti:33b83ac8ae7846a3a6229bdee09b16e3</td></tr><tr><th>exp</th><td class="hash">1772000900</td></tr></table><p>The seller's checks on the token it was shown:</p><table><tr><th>check</th><th>result</th><th>detail</th></tr><tr><td>signature</td><td><strong>PASS</strong></td><td>alg=EdDSA kid=f5c2aca7d1add934 verified against issuer JWKS (STUB issuer, real Ed25519)</td></tr><tr><td>audience</td><td><strong>PASS</strong></td><td>aud must equal &#x27;urn:frobozz-supply&#x27;</td></tr><tr><td>scope</td><td><strong>PASS</strong></td><td>&#x27;urn:frobozz-supply:orders.submit&#x27; must appear in the granted scope list</td></tr><tr><td>expiry</td><td><strong>PASS</strong></td><td>exp must be &gt; 1772000000</td></tr></table></div><h2>Two ledgers, two operators, two keys</h2>
+<div class="card"><h3>acme-co &mdash;
+ 5 capsules</h3>
+<p class="hash">key_id 2e0a850bc83521db814fdfdf0c3d7a0fd88204ec4dcaf5a3bdec1f44318251c3</p>
+<table><tr><th>capsule_id</th><th>action</th><th>verdict</th><th>effect</th><th>chains to</th></tr><tr><td class="hash">ae22a977993081420792…</td><td>get_price</td><td>executed</td><td>planned</td><td class="hash">—</td></tr><tr><td class="hash">7c7e9f8169b0fe63306e…</td><td>submit_order</td><td>executed</td><td>dispatched</td><td class="hash">—</td></tr><tr><td class="hash">223f4c8cac2a8c7c129d…</td><td>approve_large_order</td><td>blocked</td><td>planned</td><td class="hash">7c7e9f8169b0… (sequence)</td></tr><tr><td class="hash">28c65dab70375391e06a…</td><td>escalate_to_manager</td><td>executed</td><td>dispatched</td><td class="hash">223f4c8cac2a… (escalates)</td></tr><tr><td class="hash">a05af1966338c4c7f6a9…</td><td>close_out_order</td><td>executed</td><td>confirmed</td><td class="hash">e038d2af5aef… (confirms)</td></tr></table></div>
+<div class="card"><h3>frobozz-supply &mdash;
+ 3 capsules</h3>
+<p class="hash">key_id e4c624474d0d0e48cb79f2919db7a56558027c0f3d80a6238fb1192543ce6592</p>
+<table><tr><th>capsule_id</th><th>action</th><th>verdict</th><th>effect</th><th>chains to</th></tr><tr><td class="hash">31063177740c10bf9216…</td><td>receive_order</td><td>executed</td><td>dispatched</td><td class="hash">—</td></tr><tr><td class="hash">f039cc7fbbd397230cf3…</td><td>fulfill_order</td><td>executed</td><td>dispatched</td><td class="hash">31063177740c… (confirms)</td></tr><tr><td class="hash">e038d2af5aef71561d0d…</td><td>confirm_fulfillment</td><td>executed</td><td>confirmed</td><td class="hash">7c7e9f8169b0… (confirms)</td></tr></table></div><h2>Offline cross-verify — a stranger, both ledgers, no trust</h2>
+<p><span class="badge b-ok">19 CHECKS, 0 FAILURES</span></p>
+<table><tr><th>check</th><th>what</th><th>verdict</th><th>detail</th></tr><tr><td>C1</td><td>acme-co: payload verify (5 capsules)</td><td><strong>ok</strong></td><td>capsule_id recomputes + §5 structure holds; signature NOT checked here</td></tr><tr><td>C1</td><td>frobozz-supply: payload verify (3 capsules)</td><td><strong>ok</strong></td><td>capsule_id recomputes + §5 structure holds; signature NOT checked here</td></tr><tr><td>C2</td><td>acme-co: producer COSE_Sign1 signature</td><td><strong>ok</strong></td><td>each capsule_id signed under the key named in key_id</td></tr><tr><td>C2</td><td>frobozz-supply: producer COSE_Sign1 signature</td><td><strong>ok</strong></td><td>each capsule_id signed under the key named in key_id</td></tr><tr><td>C3</td><td>acme-co: subject-bound (operator + key_id)</td><td><strong>ok</strong></td><td>operator=[&#x27;acme-co&#x27;] key_id=2e0a850bc83521db…</td></tr><tr><td>C3</td><td>frobozz-supply: subject-bound (operator + key_id)</td><td><strong>ok</strong></td><td>operator=[&#x27;frobozz-supply&#x27;] key_id=e4c624474d0d0e48…</td></tr><tr><td>C3</td><td>two parties, two distinct producer keys</td><td><strong>ok</strong></td><td>2e0a850bc83521db… vs e4c624474d0d0e48…</td></tr><tr><td>C4</td><td>acme-co: links resolvable within its own ledger alone</td><td><strong>ok</strong></td><td>1 cross-ledger citation(s) unresolvable alone (expected): [(&#x27;a05af1966338&#x27;, &#x27;e038d2af5aef&#x27;)]</td></tr><tr><td>C4</td><td>frobozz-supply: links resolvable within its own ledger alone</td><td><strong>ok</strong></td><td>1 cross-ledger citation(s) unresolvable alone (expected): [(&#x27;e038d2af5aef&#x27;, &#x27;7c7e9f8169b0&#x27;)]</td></tr><tr><td>C4</td><td>union of both ledgers: every chain parent resolves</td><td><strong>ok</strong></td><td>8 capsules, 0 dangling links</td></tr><tr><td>C5</td><td>the three bilateral capsules are present</td><td><strong>ok</strong></td><td>submit_order / confirm_fulfillment / close_out_order</td></tr><tr><td>C5</td><td>both parties committed the SAME subject_digest</td><td><strong>ok</strong></td><td>e26a998baaf99379b32d9c60…</td></tr><tr><td>C5</td><td>seller&#x27;s confirm cites buyer&#x27;s order by content address</td><td><strong>ok</strong></td><td>e038d2af5aef… -&gt; 7c7e9f8169b0…</td></tr><tr><td>C5</td><td>buyer&#x27;s close-out cites seller&#x27;s confirm by content address</td><td><strong>ok</strong></td><td>a05af1966338… -&gt; e038d2af5aef…</td></tr><tr><td>C6</td><td>acme-co (held grant): claim digests recompute from disclosure</td><td><strong>ok</strong></td><td>iss/sub/aud/scope + claims_digest match, jti=9bdee09b16e3</td></tr><tr><td>C6</td><td>acme-co (held grant): record asserts no raw token committed</td><td><strong>ok</strong></td><td>raw_token_committed=false</td></tr><tr><td>C6</td><td>frobozz-supply (presented grant): claim digests recompute from disclosure</td><td><strong>ok</strong></td><td>iss/sub/aud/scope + claims_digest match, jti=9bdee09b16e3</td></tr><tr><td>C6</td><td>frobozz-supply (presented grant): record asserts no raw token committed</td><td><strong>ok</strong></td><td>raw_token_committed=false</td></tr><tr><td>C7</td><td>raw access token absent from both ledgers</td><td><strong>ok</strong></td><td>searched 4 needles (whole token + each segment) across 23175 bytes</td></tr></table><h3>Beyond the 19 — the negotiation's own commitments</h3>
+<p class="sub">A separate, opt-in section
+(<code>crossverify.py --bundle &lt;dir&gt; --mandate</code>). Deliberately not folded
+into the headline count.</p>
+<table><tr><th>what</th><th>verdict</th><th>detail</th></tr><tr><td>wicket digest recomputes from wicket.json</td><td><strong>ok</strong></td><td>744670b20906b5ff6be2258e… vs sealed 744670b20906b5ff6be2258e…</td></tr><tr><td>negotiation digest recomputes from negotiation.json</td><td><strong>ok</strong></td><td>3 rounds, ab457a5a44fe59ac7b738f02…</td></tr><tr><td>accepted-offer digest recomputes from the winner block</td><td><strong>ok</strong></td><td>frobozz-supply @ 42.00/unit</td></tr><tr><td>both ledgers sealed the same accepted-offer digest</td><td><strong>ok</strong></td><td>buyer 2dd3b2d16f0982b5… / seller 2dd3b2d16f0982b5…</td></tr><tr><td>winner regraded against the disclosed hard invariants</td><td><strong>ok</strong></td><td>4 invariants rechecked, 0 failed; record claims &#x27;pass&#x27;</td></tr><tr><td>order hashing to the sealed subject_digest IS the winning offer</td><td><strong>ok</strong></td><td>Frobozz Supply 29 @ 42.00 net30 = 1218.00; subject_digest recomputes=True</td></tr></table><h2>Four tampers, four different failures</h2><div class="tamper card">
+<h3>--tamper capsule_id <span class="badge b-bad">2 CHECKS FAILED</span></h3>
+<p class="sub">a field was added after sealing -&gt; the record no longer hashes to its own id, and the signature was over the old id (C1 + C2).</p>
+<table><tr><th>check</th><th>what</th><th>verdict</th><th>detail</th></tr><tr class="fail"><td>C1</td><td>acme-co: payload verify (5 capsules)</td><td><strong>FAIL</strong></td><td>1 failed: [(&#x27;7c7e9f8169b0&#x27;, [&#x27;recomputed 5751af6ff548d141817c8d16bac80ffc360a29df7ea073a9dd893bbb0ab3ae1d != carried 7c7e9f8169b0fe63306ef4acab7a04a44d1b80cbcd8eb89ce994dcaa5412befe&#x27;])]</td></tr><tr class="fail"><td>C2</td><td>acme-co: producer COSE_Sign1 signature</td><td><strong>FAIL</strong></td><td>1 failed: [&#x27;7c7e9f8169b0&#x27;]</td></tr></table>
+</div><div class="tamper card">
+<h3>--tamper output_digest <span class="badge b-bad">2 CHECKS FAILED</span></h3>
+<p class="sub">one hex char of an output digest flipped -&gt; the id recomputes differently and the signature no longer matches (C1 + C2).</p>
+<table><tr><th>check</th><th>what</th><th>verdict</th><th>detail</th></tr><tr class="fail"><td>C1</td><td>frobozz-supply: payload verify (3 capsules)</td><td><strong>FAIL</strong></td><td>1 failed: [(&#x27;e038d2af5aef&#x27;, [&#x27;recomputed 3467071ec65f856f003d6dcff9b5074208a0fcf3b9e771f6cd346b5f27b94298 != carried e038d2af5aef71561d0d09e67e216879743635694f053af8fae2a4a77014bdc4&#x27;, &#x27;chain parent-existence and concurrent-supersedes are store-level checks (§6); not run without a store&#x27;, &quot;effect.type=&#x27;confirm_fulfillment&#x27; is not a seeded effect.type value; informational, not rejected (§12)&quot;])]</td></tr><tr class="fail"><td>C2</td><td>frobozz-supply: producer COSE_Sign1 signature</td><td><strong>FAIL</strong></td><td>1 failed: [&#x27;e038d2af5aef&#x27;]</td></tr></table>
+</div><div class="tamper card">
+<h3>--tamper cross_citation <span class="badge b-bad">4 CHECKS FAILED</span></h3>
+<p class="sub">the cross-ledger pointer was repointed at a capsule that does not exist -&gt; the id breaks, the union has a dangling link, and the citation no longer matches (C1 + C2 + C4 + C5).</p>
+<table><tr><th>check</th><th>what</th><th>verdict</th><th>detail</th></tr><tr class="fail"><td>C1</td><td>frobozz-supply: payload verify (3 capsules)</td><td><strong>FAIL</strong></td><td>1 failed: [(&#x27;e038d2af5aef&#x27;, [&#x27;recomputed 35322598e660b80da7036f7da31ef323537b9ef3bc0c8ef48cbba67ecc502010 != carried e038d2af5aef71561d0d09e67e216879743635694f053af8fae2a4a77014bdc4&#x27;, &#x27;chain parent-existence and concurrent-supersedes are store-level checks (§6); not run without a store&#x27;, &quot;effect.type=&#x27;confirm_fulfillment&#x27; is not a seeded effect.type value; informational, not rejected (§12)&quot;])]</td></tr><tr class="fail"><td>C2</td><td>frobozz-supply: producer COSE_Sign1 signature</td><td><strong>FAIL</strong></td><td>1 failed: [&#x27;e038d2af5aef&#x27;]</td></tr><tr class="fail"><td>C4</td><td>union of both ledgers: every chain parent resolves</td><td><strong>FAIL</strong></td><td>unresolved: [(&#x27;e038d2af5aef&#x27;, &#x27;ffffffffffff&#x27;)]</td></tr><tr class="fail"><td>C5</td><td>seller&#x27;s confirm cites buyer&#x27;s order by content address</td><td><strong>FAIL</strong></td><td>cites ffffffffffff…, expected 7c7e9f8169b0…</td></tr></table>
+</div><div class="tamper card">
+<h3>--tamper authority_scope <span class="badge b-bad">2 CHECKS FAILED</span></h3>
+<p class="sub">the DISCLOSED AAuth scope was widened after the fact -&gt; the sealed scope/claims digests no longer recompute from the disclosure (C6).</p>
+<table><tr><th>check</th><th>what</th><th>verdict</th><th>detail</th></tr><tr class="fail"><td>C6</td><td>acme-co (held grant): claim digests recompute from disclosure</td><td><strong>FAIL</strong></td><td>mismatched=[&#x27;scope&#x27;] claims_digest_ok=False jti_ok=True</td></tr><tr class="fail"><td>C6</td><td>frobozz-supply (presented grant): claim digests recompute from disclosure</td><td><strong>FAIL</strong></td><td>mismatched=[&#x27;scope&#x27;] claims_digest_ok=False jti_ok=True</td></tr></table>
+</div><h2>What this run did NOT establish</h2>
+<ul class="limits">
+<li><strong>The negotiation is scripted.</strong> Fixed ladders, no model, no live
+counterparties. It shows the <em>shape</em> of a haggle, not that one happened.</li>
+<li><strong>The offers and counters are not sealed as capsules.</strong> What is sealed
+is the digest of the negotiation record and of the winning offer, so an altered
+transcript stops matching — but a negotiation nobody wrote down leaves no trace
+either way.</li>
+<li><strong>No identity binding.</strong> No agent card, no JWKS URL, no DNS record.
+<code>key_id &rarr; operator</code> is bound only by this bundle's
+<code>parties.json</code>. The producer signature proves the <em>holder of a key</em>
+sealed a record, never who that key belongs to.</li>
+<li><strong>The AAuth Authorization Server is a stub in this process.</strong> Its
+Ed25519 key is real and its JWS genuinely verifies; nothing about it was deployed,
+discovered or operated.</li>
+<li><strong>No human was prompted at runtime</strong>, on either the consent review or
+the $125,000 refusal. The capsule <em>records</em> a decision a human made.</li>
+<li><strong>Integrity, not completeness.</strong> Nothing here proves a party did not
+simply decline to write a record down.</li>
+<li><strong>Nothing here is a standard.</strong>
+<code>draft-rosenberg-oauth-aauth-01</code>,
+<code>draft-mih-scitt-agent-action-capsule-04</code> and
+<code>draft-mih-agent-bilateral-attestation-00</code> are individual Internet-Drafts,
+work in progress, not WG-adopted.</li>
+</ul><p class="foot">demo2 &mdash; rendered offline by
+<code>render_html.py</code>: inline CSS, no script, no external reference of any kind.
+Negotiation shape adapted from the accountable deal-room's room view and DJ-buyer
+skill; rebuilt scripted and offline. Prepared with AI-agent assistance under human
+direction.</p>
+</body></html>

@@ -1,0 +1,199 @@
+{
+  "rfq": {
+    "rfq_id": "RFQ-7777",
+    "buyer": "Acme Co",
+    "sku": "widget",
+    "quantity": 29,
+    "required_payment_terms": "net30",
+    "max_lead_time_days": 14,
+    "note": "Quoting two suppliers. Price per unit, payment terms, lead time."
+  },
+  "sellers": [
+    {
+      "operator": "frobozz-supply",
+      "display": "Frobozz Supply",
+      "blurb": "Incumbent widget supplier. Regional warehouse, own freight desk."
+    },
+    {
+      "operator": "globex-corp",
+      "display": "Globex Corp",
+      "blurb": "National distributor. Container-scale pricing, port-side lead times."
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "kind": "opening quotes",
+      "counter_usd": null,
+      "offers": [
+        {
+          "round": 1,
+          "seller": "frobozz-supply",
+          "seller_display": "Frobozz Supply",
+          "buyer_counter_usd": null,
+          "unit_price_usd": "52.00",
+          "payment_terms": "net15",
+          "lead_time_days": 12,
+          "total_usd": "1508.00",
+          "said": "List is $52.00 a unit, net15, twelve days out. No volume break at 29.",
+          "moved_usd": "0.00",
+          "final": false
+        },
+        {
+          "round": 1,
+          "seller": "globex-corp",
+          "seller_display": "Globex Corp",
+          "buyer_counter_usd": null,
+          "unit_price_usd": "48.00",
+          "payment_terms": "net30",
+          "lead_time_days": 21,
+          "total_usd": "1392.00",
+          "said": "$48.00 a unit, net30 from the start, but I'm three weeks out.",
+          "moved_usd": "0.00",
+          "final": false
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "kind": "buyer anchors at 60%",
+      "counter_usd": null,
+      "offers": [
+        {
+          "round": 2,
+          "seller": "frobozz-supply",
+          "seller_display": "Frobozz Supply",
+          "buyer_counter_usd": "31.20",
+          "unit_price_usd": "47.50",
+          "payment_terms": "net30",
+          "lead_time_days": 12,
+          "total_usd": "1377.50",
+          "said": "$47.50 and I'll move you to net30 \u2014 the terms cost me less than the price does.",
+          "moved_usd": "4.50",
+          "final": false
+        },
+        {
+          "round": 2,
+          "seller": "globex-corp",
+          "seller_display": "Globex Corp",
+          "buyer_counter_usd": "28.80",
+          "unit_price_usd": "46.00",
+          "payment_terms": "net30",
+          "lead_time_days": 16,
+          "total_usd": "1334.00",
+          "said": "$46.00. I can pull it to sixteen days; below that I'd be paying air freight.",
+          "moved_usd": "2.00",
+          "final": false
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "kind": "buyer climbs, sellers close",
+      "counter_usd": "40.00",
+      "offers": [
+        {
+          "round": 3,
+          "seller": "frobozz-supply",
+          "seller_display": "Frobozz Supply",
+          "buyer_counter_usd": "40.00",
+          "unit_price_usd": "42.00",
+          "payment_terms": "net30",
+          "lead_time_days": 10,
+          "total_usd": "1218.00",
+          "said": "$42.00, net30, ten days, and I absorb the expedited freight. That is best and final.",
+          "moved_usd": "5.50",
+          "final": true
+        },
+        {
+          "round": 3,
+          "seller": "globex-corp",
+          "seller_display": "Globex Corp",
+          "buyer_counter_usd": "40.00",
+          "unit_price_usd": "41.50",
+          "payment_terms": "net30",
+          "lead_time_days": 21,
+          "total_usd": "1203.50",
+          "said": "$41.50 \u2014 I'll beat anyone on price if you can take the three-week lead. That's the trade.",
+          "moved_usd": "4.50",
+          "final": true
+        }
+      ]
+    }
+  ],
+  "final": [
+    {
+      "seller": "frobozz-supply",
+      "seller_display": "Frobozz Supply",
+      "unit_price_usd": "42.00",
+      "payment_terms": "net30",
+      "lead_time_days": 10,
+      "total_usd": "1218.00",
+      "eligible": true,
+      "wicket_checks": [
+        {
+          "invariant": "unit_ceiling",
+          "passed": true,
+          "detail": "unit 42.00 vs ceiling (private)"
+        },
+        {
+          "invariant": "payment_terms",
+          "passed": true,
+          "detail": "terms net30, brief requires net30"
+        },
+        {
+          "invariant": "lead_time",
+          "passed": true,
+          "detail": "lead 10d vs 14d maximum"
+        }
+      ]
+    },
+    {
+      "seller": "globex-corp",
+      "seller_display": "Globex Corp",
+      "unit_price_usd": "41.50",
+      "payment_terms": "net30",
+      "lead_time_days": 21,
+      "total_usd": "1203.50",
+      "eligible": false,
+      "wicket_checks": [
+        {
+          "invariant": "unit_ceiling",
+          "passed": true,
+          "detail": "unit 41.50 vs ceiling (private)"
+        },
+        {
+          "invariant": "payment_terms",
+          "passed": true,
+          "detail": "terms net30, brief requires net30"
+        },
+        {
+          "invariant": "lead_time",
+          "passed": false,
+          "detail": "lead 21d vs 14d maximum"
+        }
+      ]
+    }
+  ],
+  "wicket_digest": "744670b20906b5ff6be2258e720479ddc951dfb03df285525fe1b2e61460606c",
+  "wicket_result": "pass",
+  "winner": {
+    "seller": "frobozz-supply",
+    "seller_display": "Frobozz Supply",
+    "unit_price_usd": "42.00",
+    "payment_terms": "net30",
+    "lead_time_days": 10,
+    "quantity": 29,
+    "total_usd": "1218.00"
+  },
+  "privacy_check": {
+    "frames_searched": 13,
+    "secrets_searched": [
+      "50.00",
+      "43.00"
+    ],
+    "leaked": [],
+    "passed": true
+  },
+  "negotiation_digest": "ab457a5a44fe59ac7b738f0223b9dd21c1a34cf5a64b8575df397e102988255e"
+}
